@@ -1,0 +1,10 @@
+id,name,x_m,y_m
+GATE,Main Gate,0,0
+ADMIN,Admin Block,100,0
+LIB,Library,200,0
+CSE,CSE Block,300,0
+CAFE,Cafeteria,100,100
+AUD,Auditorium,200,100
+LAB,Research Lab,300,100
+HOSTEL,Hostel A,0,200
+SPORTS,Sports Ground,200,200
