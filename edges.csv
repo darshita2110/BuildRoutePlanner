@@ -1,0 +1,5 @@
+from,to,distance_m,road_name
+GATE,ADMIN,100,Central Walk
+ADMIN,LIB,100,Central Walk
+ADMIN,CAFE,100,Food Court Walk
+GATE,CAFE,250,Outer Road
