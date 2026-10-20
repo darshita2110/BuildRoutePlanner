@@ -13,6 +13,11 @@ struct Node{
     double x;
     double y;
 };
+struct Edge {
+    int to;
+    double distance;
+    string roadName;
+};
 
 vector<string> splitCsv(const string& line) {
     vector<string> fields;
@@ -29,6 +34,7 @@ vector<string> splitCsv(const string& line) {
 class Graph {
     private :
         vector<Node> nodes;
+        vector<vector<Edge>> adjacency; // directs road leaving each node
         unordered_map<string, int> idToIndex;
 
     public :
@@ -61,6 +67,40 @@ class Graph {
 
                 idToIndex[node.id] = static_cast<int>(nodes.size());
                 nodes.push_back(node);
+                adjacency.emplace_back(); // add an empty vector for edges
+            }
+        }
+
+        void loadEdges(const string& filename) {
+            ifstream file(filename);
+            if(!file) {
+                throw runtime_error("Cannot open " + filename);
+            }
+
+            string line;
+            getline(file, line);
+            while(getline(file, line)) {
+                if(line.empty()) continue;
+
+                vector<string> fields = splitCsv(line);
+                if(fields.size() != 4) {
+                    throw runtime_error("An edge row must have 4 fields");
+                }
+                auto fromIt = idToIndex.find(fields[0]);
+                auto toIt = idToIndex.find(fields[1]);
+
+                if(fromIt == idToIndex.end() || toIt == idToIndex.end()) {
+                    throw runtime_error("Road refers to an unknown noded ID");
+                }
+                double distance = stod(fields[2]);
+                if(distance <= 0) {
+                    throw runtime_error("Distance must be positive");
+                }
+                int from = fromIt->second;
+                int to = toIt->second;    
+                  
+                adjacency[from].push_back({to, distance, fields[3]});
+                adjacency[to].push_back({from, distance, fields[3]});         
             }
         }
 
@@ -75,6 +115,7 @@ int main() {
     try {
         Graph graph;
         graph.loadNodes("nodes.csv");
+        graph.loadEdges("edges.csv");
         graph.printNodes();
     }
     catch (const exception& error) {
