@@ -98,7 +98,7 @@ class Graph {
                 }
                 int from = fromIt->second;
                 int to = toIt->second;    
-                  
+
                 adjacency[from].push_back({to, distance, fields[3]});
                 adjacency[to].push_back({from, distance, fields[3]});         
             }
@@ -109,6 +109,17 @@ class Graph {
                 cout<< node.id << " -> " << node.name << " (" << node.x << ", " << node.y << ")\n";
             }
         }
+
+        void printRoads() const {
+            for(size_t i = 0; i < nodes.size(); i++) {
+                cout<< nodes[i].id<< "\n";
+                for(const Edge& road : adjacency[i]) {
+                    cout << " -> " << nodes[road.to].id 
+                    << " (" << road.distance << " m via " 
+                    << road.roadName << ")\n";
+                }
+            }
+        }
 };
 
 int main() {
@@ -117,6 +128,7 @@ int main() {
         graph.loadNodes("nodes.csv");
         graph.loadEdges("edges.csv");
         graph.printNodes();
+        graph.printRoads();
     }
     catch (const exception& error) {
         cerr << "Error: " << error.what() << '\n';
