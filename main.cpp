@@ -186,13 +186,21 @@ int main() {
         Graph graph;
         graph.loadNodes("nodes.csv");
         graph.loadEdges("edges.csv");
-        int start = graph.findNode("GATE");
-        int end = graph.findNode("LAB");
+        string startId, goalId;
 
-        if(start == -1 || end == -1) {
+        cout << "Start ID: ";
+        getline(cin, startId);
+
+        cout << "Destination ID: ";
+        getline(cin, goalId);
+
+        int start = graph.findNode(startId);
+        int goal = graph.findNode(goalId);
+
+        if(start == -1 || goal == -1) {
             throw runtime_error("Unknown start or end");
         }
-        Route route = graph.shortestPath(start, end);
+        Route route = graph.shortestPath(start, goal);
         if(route.path.empty()) {
             cout<<"No route found\n";
         }
