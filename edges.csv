@@ -3,3 +3,5 @@ GATE,ADMIN,100,Central Walk
 ADMIN,LIB,100,Central Walk
 ADMIN,CAFE,100,Food Court Walk
 GATE,CAFE,250,Outer Road
+LIB,CSE,100,Academic Walk
+CSE,LAB,100,Research Lane

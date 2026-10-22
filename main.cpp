@@ -5,6 +5,11 @@
 #include<string>
 #include<vector>
 #include<unordered_map>
+#include<algorithm>
+#include<functional>
+#include<limits>
+#include<queue>
+#include<utility>
 using namespace std;
 
 struct Node{
@@ -17,6 +22,10 @@ struct Edge {
     int to;
     double distance;
     string roadName;
+};
+struct Route{
+    vector<int> path;
+    double distance = numeric_limits<double>::infinity();
 };
 
 vector<string> splitCsv(const string& line) {
@@ -128,6 +137,45 @@ class Graph {
             }
             return it->second;
         }
+
+        Route shortestPath(int start, int goal) const {
+            const double INF = numeric_limits<double>::infinity();
+            vector<double> dist(nodes.size(), INF);
+            vector<int> parent(nodes.size(), -1);
+            using Entry = pair<double, int>;
+            priority_queue<Entry, vector<Entry>, greater<Entry>> pq;
+
+            dist[start] = 0;
+            pq.push({0, start});
+            while(!pq.empty()) {
+                Entry topEntry = pq.top();
+                double currentDist = topEntry.first;
+                int u = topEntry.second;
+                pq.pop();
+                if(currentDist > dist[u]) continue;
+                if(u == goal) break;
+
+                for(const Edge& road : adjacency[u]) {
+                    double candidate = dist[u] + road.distance;
+
+                    if(candidate < dist[road.to]) {
+                        dist[road.to] = candidate;
+                        parent[road.to] = u;
+                        pq.push({candidate, road.to});
+                    }
+                }
+            }
+            if(dist[goal] == INF) return {};
+
+            Route result;
+            result.distance = dist[goal];   
+            for(int at = goal; at != -1; at = parent[at]) {
+                result.path.push_back(at);
+            }   
+            reverse(result.path.begin(), result.path.end());
+            return result;         
+        }
+
 };
 
 int main() {
@@ -135,6 +183,24 @@ int main() {
         Graph graph;
         graph.loadNodes("nodes.csv");
         graph.loadEdges("edges.csv");
+        int start = graph.findNode("GATE");
+        int end = graph.findNode("CAFE");
+
+        if(start == -1 || end == -1) {
+            throw runtime_error("Unknown start or end");
+        }
+        Route route = graph.shortestPath(start, end);
+        if(route.path.empty()) {
+            cout<<"No route found\n";
+        }
+        else {
+            cout<<"Shortest Distance: "<< route.distance << "m\n";
+            cout<< "Node indices: ";
+            for(int index : route.path) {
+                cout<<index<<" ";
+            }
+            cout<<"\n";
+        }
         graph.printNodes();
         graph.printRoads();
         
