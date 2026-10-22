@@ -5,3 +5,10 @@ ADMIN,CAFE,100,Food Court Walk
 GATE,CAFE,250,Outer Road
 LIB,CSE,100,Academic Walk
 CSE,LAB,100,Research Lane
+CAFE,AUD,100,East Walk
+LIB,AUD,100,Library Lane
+AUD,LAB,100,Research Lane
+GATE,HOSTEL,220,Residence Road
+HOSTEL,SPORTS,210,Field Road
+CAFE,SPORTS,115,South Walk
+AUD,SPORTS,105,South Walk

@@ -175,6 +175,9 @@ class Graph {
             reverse(result.path.begin(), result.path.end());
             return result;         
         }
+        string placeName(int index) const {
+            return nodes.at(index).name;
+    }
 
 };
 
@@ -184,7 +187,7 @@ int main() {
         graph.loadNodes("nodes.csv");
         graph.loadEdges("edges.csv");
         int start = graph.findNode("GATE");
-        int end = graph.findNode("CAFE");
+        int end = graph.findNode("LAB");
 
         if(start == -1 || end == -1) {
             throw runtime_error("Unknown start or end");
@@ -195,9 +198,10 @@ int main() {
         }
         else {
             cout<<"Shortest Distance: "<< route.distance << "m\n";
-            cout<< "Node indices: ";
-            for(int index : route.path) {
-                cout<<index<<" ";
+            cout<< "Path: ";
+            for (size_t i = 0; i < route.path.size(); ++i) {
+                if (i > 0) cout << " -> ";
+                cout << graph.placeName(route.path[i]);
             }
             cout<<"\n";
         }
