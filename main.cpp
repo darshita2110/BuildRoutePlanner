@@ -120,6 +120,14 @@ class Graph {
                 }
             }
         }
+
+        int findNode(const string& id) {
+            auto it = idToIndex.find(id);
+            if(it == idToIndex.end()) {
+                return -1;
+            }
+            return it->second;
+        }
 };
 
 int main() {
@@ -129,11 +137,11 @@ int main() {
         graph.loadEdges("edges.csv");
         graph.printNodes();
         graph.printRoads();
+        
     }
     catch (const exception& error) {
         cerr << "Error: " << error.what() << '\n';
         return 1;
     }
-
     return 0;
 }
