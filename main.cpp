@@ -179,6 +179,22 @@ class Graph {
             return nodes.at(index).name;
     }
 
+    void printDirections(const Route& route) const {
+        for(size_t i = 1; i < route.path.size(); i++) {
+            int from = route.path[i - 1];
+            int to = route.path[i];
+
+            for(const Edge& road : adjacency[from]) {
+                if(road.to == to) {
+                    cout << i << ". Take " << road.distance << " m via " << road.roadName <<
+                    " for " << road.distance << " m from " <<
+                    nodes[from].name << " to " << nodes[to].name << ".\n";
+                    break;
+                }
+            }
+        }
+    }
+
 };
 
 int main() {
@@ -212,6 +228,9 @@ int main() {
                 cout << graph.placeName(route.path[i]);
             }
             cout<<"\n";
+            cout << "Directions:\n";
+            graph.printDirections(route);
+            
         }
         graph.printNodes();
         graph.printRoads();
