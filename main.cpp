@@ -189,7 +189,7 @@ class Graph {
 
             for(const Edge& road : adjacency[from]) {
                 if(road.to == to) {
-                    cout << i << ". Take " << road.distance << " m via " << road.roadName <<
+                    cout << i << ". Take " << road.roadName << " m via " << road.roadName <<
                     " for " << road.distance << " m from " <<
                     nodes[from].name << " to " << nodes[to].name << ".\n";
                     break;
