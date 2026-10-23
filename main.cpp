@@ -138,7 +138,7 @@ class Graph {
             return it->second;
         }
 
-        Route shortestPath(int start, int goal) const {
+        Route shortestPath(int start, int goal, int blockedA = -1, int blockedB = -1) const {
             const double INF = numeric_limits<double>::infinity();
             vector<double> dist(nodes.size(), INF);
             vector<int> parent(nodes.size(), -1);
@@ -156,6 +156,9 @@ class Graph {
                 if(u == goal) break;
 
                 for(const Edge& road : adjacency[u]) {
+                    if((u == blockedA && road.to == blockedB) || 
+                    (u == blockedB && road.to == blockedA)) 
+                    continue;
                     double candidate = dist[u] + road.distance;
 
                     if(candidate < dist[road.to]) {
@@ -195,6 +198,13 @@ class Graph {
         }
     }
 
+    bool hasRoad(int from, int to) const {
+        for (const Edge& road : adjacency[from]) {
+            if (road.to == to) return true;
+        }
+        return false;
+    }
+
 };
 
 int main() {
@@ -216,7 +226,31 @@ int main() {
         if(start == -1 || goal == -1) {
             throw runtime_error("Unknown start or end");
         }
-        Route route = graph.shortestPath(start, goal);
+        int blockedA = -1;
+        int blockedB = -1;
+
+        string closedFromId;
+        cout << "Closed road start ID (press Enter for none): ";
+        getline(cin, closedFromId);
+
+        if (!closedFromId.empty()) {
+            string closedToId;
+            cout << "Closed road end ID: ";
+            getline(cin, closedToId);
+
+            blockedA = graph.findNode(closedFromId);
+            blockedB = graph.findNode(closedToId);
+
+            if (blockedA == -1 || blockedB == -1) {
+                throw runtime_error("Unknown closed-road endpoint");
+            }
+
+            if (!graph.hasRoad(blockedA, blockedB)) {
+                throw runtime_error("No direct road exists between those places");
+            }
+        }
+
+        Route route = graph.shortestPath(start, goal, blockedA, blockedB);
         if(route.path.empty()) {
             cout<<"No route found\n";
         }
